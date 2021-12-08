@@ -90,7 +90,7 @@ You can inspect Dockerfile to check how server was set up
 
 #### 4. Check openssl version
 
-## Excercise 2: Exploit using script
+## Exercise 2: Exploit using script
 
 * Before exploiting, you must stimulate the server with potentially sensitive data
 that can be harvested later by the exploit. The `stimulate_server.py` script
