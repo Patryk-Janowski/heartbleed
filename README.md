@@ -105,19 +105,19 @@ following is its usage and options:
 
 Edit openssl.conf file:
 
-"""
+"""shell
 sudo nano /etc/ssl/openssl.cnf
 """
 
 Add this line at the top:
 
-"""
+"""shell
 openssl_conf = openssl_init
 """
 
 And then this to the end:
 
-"""
+"""shell
 [openssl_init]
 ssl_conf = ssl_sect
 
