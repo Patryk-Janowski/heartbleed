@@ -53,11 +53,11 @@ You can access server via https://127.0.0.1
 
 ## Excercise 1: Find potential victioms and get to know the sever
 
-#### Finding vulnerable sites
+#### 1. Finding vulnerable sites
 * use https://safeweb.norton.com/heartbleed to check if your favourite site is vulnerable.
 * try to find site which is vulnerable to heartbleed (for example you can use https://shodan.io).
 
-#### Using nmap check if server and found site are vulnerable
+#### 2. Using nmap check if server and found site are vulnerable
 ```shell
 sudo nmap -p 443 --script ssl-heartbleed <IP>
 ```
@@ -67,13 +67,18 @@ sudo nmap -p 443 --script ssl-heartbleed <IP>
 sudo docker ps -a 
 sudo docker exec -it <id> /bin/bash
 ```
-#### View certificate and private key
+#### 3. View certificate and private key
+If you wish to run another bash instance inside container
 
+```shell
+sudo docker ps -a 
+sudo docker exec -it <id> /bin/bash
+```
 You can inspect Dockerfile to check how server was set up
 
-#### Check openssl version
+#### 4. Check openssl version
 
-## Excercise 2 Exploit using script
+## Excercise 2: Exploit using script
 
 Before exploiting, you must stimulate the server with potentially sensitive data
 that can be harvested later by the exploit. The `stimulate_server.py` script
@@ -90,63 +95,68 @@ watch 'cat /etc/apache2/ssl/apache.crt ; cat /etc/apache2/ssl/apache.key'
 
 ```
 
+#### 1. Using script try to extract some sensitive data
 This repo includes heartbleed.py script (in python2)
 
 ```shell
 ./heartbleed.py -h
 ```
+* read script manual
+* explore options
 
-#### Using script try to extract some sensitive data
-#### Set verbose option analize how script executes
-#### Try to steal server private key and certificate
+#### 2. Analize how script executes
+* Set verbose flag
+* Addionatly you can use Wireshark to inspect network traffic
+
+#### 3. Try to steal server private key and certificate
 
 
-## Excersice 3 Exploit using metaspoit
+## Excersice 3: Exploit using metaspoit
 
-#### Start the Metasploit console
+#### 1. Start the Metasploit console
 ```shell
 sudo msfconsole
 ```
 
-#### Search Heartbleed module by using built in search feature in Metasploit framework
+#### 2. Search Heartbleed module by using built in search feature in Metasploit framework
 ```shell
 search heartbleed
 ```
 
-#### Load the heartbleed by module
+#### 3. Load the heartbleed by module
 ```shell
 use auxiliary/scanner/ssl/openssl_heartbleed
 ```
 
-#### After loading the auxiliary module, extract the info page to reveal the options to set the target
+#### 4. After loading the auxiliary module, extract the info page to reveal the options to set the target
 ```shell
 show info
 ```
 
-#### This is a list of all auxiliary actions that the scanner/ssl/openssl_heartbleed module can do:
+#### 5. This is a list of all auxiliary actions that the scanner/ssl/openssl_heartbleed module can do:
 ```shell
 show actions
 ```
 
-#### Here is a complete list of advanced options supported by the scanner/ssl/openssl_heartbleed auxiliary module:
+#### 6. Here is a complete list of advanced options supported by the scanner/ssl/openssl_heartbleed auxiliary module:
 ```shell
 show advanced
 ```
 
-#### To view full list of possible evasion options supported by the scanner/ssl/openssl_heartbleed auxiliary module in order to evade defenses:
+#### 7. To view full list of possible evasion options supported by the scanner/ssl/openssl_heartbleed auxiliary module in order to evade defenses:
 ```shell
 show evasion
 ```
 
-#### Explore available options and actions than:
+#### 8. Explore available options and actions than:
  * Set RHOST 
  * Set Action
  * Run
-#### Extract Certificate and Private Key using metaspolit
+#### 9. Extract Certificate and Private Key using metaspolit
 
-## Excercise 4 some code snippet 
+## Excercise 4: some code snippet 
 
-#### Inscect heartbeat request/response packet
+#### 1. Inscect heartbeat request/response packet
 
 **Format of the Heartbeat request/response packet**
 
@@ -161,7 +171,7 @@ struct {
 
 The first field (1 byte) of the packet is the type information, and the second field (2 bytes) is the payload length, followed by the actual payload and paddings. The size of the payload should be the same as the value in the payload length field, but in the attack scenario, payload length can be set to a different value. The following code snippet shows how the server copies the data from the request packet to the response packet.
 
-#### Find faulty line in code bellow
+#### 2. Find faulty line in code bellow
 
 **Process the Heartbeat request packet and generate the response packet**
 
