@@ -1,6 +1,144 @@
 # Heartbleed Example
 
-## Additional info
+## Requirements and instalation
+
+* Docker
+* Metasploit
+* Python 2
+```shell
+sudo apt-get update &&
+sudo apt-get install -y python2-dev docker.io metasploit-framework curl
+```
+* Python 2 packages
+```shell
+curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output /tmp/get-pip.py &&
+sudo python2 /tmp/get-pip.py &&
+pip install --upgrade setuptools &&
+pip install gmpy pyasn1
+```
+## Docker Setup
+
+```shell
+docker pull docker.io/andrewmichaelsmith/docker-heartbleed
+```
+## Clone Repository
+
+```shell
+git clone https://github.com/okrutnik420/heartbleed.git &&
+cd heartbleed &&
+chmod 755 *
+```
+
+## Run the container
+
+On a terminal window, run the command:
+
+```shell
+sudo docker run -it -p 127.0.0.1:443:443 andrewmichaelsmith/docker-heartbleed bash
+```
+
+This command will execute bash in conatiner and map host adress 127.0.0.1:443 to local conatiner adress on port 443
+
+Type exit to exit container
+
+
+## Run the server
+inside contrainer run"
+```shell
+apache2ctl -D FOREGROUND
+```
+You can access server via https://127.0.0.1
+(unfortunetly this is default website for old version of apache2)
+
+## Stimulate the server
+
+Before exploiting, you must stimulate the server with potentially sensitive data
+that can be harvested later by the exploit. The `stimulate_server.py` script
+does that, sending random credentials to the server via HTTP POST requests. The
+following is its usage and options:
+
+```shell
+./stimulate_server.py [-a server_address] [-t sleep]
+```
+## Excercise 1: Get to know server
+
+#### Using nmap check if server is vulnerable
+```shell
+sudo nmap -p 443 --script ssl-heartbleed 127.0.0.1
+```
+
+#### If you wish to run another instance of bash inside container do:
+```shell
+sudo docker ps -a 
+sudo docker exec -it <id> /bin/bash
+```
+#### View certificate
+```hint
+Inspect Dockerfile to check how server was set up
+```
+#### Check openssl version
+
+## Excercise 2 Exploit using script
+
+This repo includes heartbleed.py script (in python2)
+
+```shell
+./heartbleed.py -h
+```
+
+* using script try to extract some sensitive data
+* set verbose option analize how script executes
+* try to steal server private key and certificate
+
+To populate server memory with keys run:
+```shell
+watch 'cat /etc/apache2/ssl/apache.crt ; cat /etc/apache2/ssl/apache.key'
+
+```
+
+## Excersice 3 Exploit using metaspoit
+
+#### Start the Metasploit console
+```shell
+sudo msfconsole
+```
+
+#### Search Heartbleed module by using built in search feature in Metasploit framework
+```shell
+search heartbleed
+```
+
+#### Load the heartbleed by module
+```shell
+use auxiliary/scanner/ssl/openssl_heartbleed
+```
+
+#### After loading the auxiliary module, extract the info page to reveal the options to set the target
+```shell
+show info
+```
+
+#### This is a list of all auxiliary actions that the scanner/ssl/openssl_heartbleed module can do:
+```shell
+show actions
+```
+
+#### Here is a complete list of advanced options supported by the scanner/ssl/openssl_heartbleed auxiliary module:
+```shell
+show advanced
+```
+
+#### To view full list of possible evasion options supported by the scanner/ssl/openssl_heartbleed auxiliary module in order to evade defenses:
+```shell
+show evasion
+```
+
+#### Explore Options Set RHOST and Run
+#### Extract Certificate and Private Key using metaspolit
+
+## Excercise 4 some code snippet 
+
+#### Inscect heartbeat request/response packet
 
 **Format of the Heartbeat request/response packet**
 
@@ -14,6 +152,8 @@ struct {
 ```
 
 The first field (1 byte) of the packet is the type information, and the second field (2 bytes) is the payload length, followed by the actual payload and paddings. The size of the payload should be the same as the value in the payload length field, but in the attack scenario, payload length can be set to a different value. The following code snippet shows how the server copies the data from the request packet to the response packet.
+
+#### Find faulty line in code bellow
 
 **Process the Heartbeat request packet and generate the response packet**
 
@@ -69,149 +209,4 @@ if (hbtype == TLS1_HB_REQUEST)
     r = ssl3_write_bytes(s, TLS1_RT_HEARTBEAT, buffer, 3 + payload + padding);
 }
 ```
-
-**The vulnerability lies here**
-
-```c
-    // copy payload
-    memcpy(bp, pl, payload);
-```
-
-There is no check to determine if `pl` is valid or not. Therefore, a memory breach can occur.
-
-## Requirements and instalation
-
-* Docker
-* Metasploit
-* Python 2
-```shell
-sudo apt-get update
-sudo apt-get install -y python2-dev docker.io metasploit-framework curl
-```
-* Python 2 packages
-```shell
-curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output /tmp/get-pip.py
-sudo python2 /tmp/get-pip.py
-pip install --upgrade setuptools
-pip install gmpy pyasn1
-```
-## Docker Setup
-
-```shell
-docker pull docker.io/andrewmichaelsmith/docker-heartbleed
-```
-## Clone Repository
-
-```shell
-git clone https://github.com/okrutnik420/heartbleed.git &&
-cd heartbleed &&
-chmod 755 *
-```
-
-## Run the container
-
-On a terminal window, run the command:
-
-```shell
-sudo docker run -it -p 127.0.0.1:443:443 andrewmichaelsmith/docker-heartbleed bash
-```
-
-This command will execute bash in conatiner and map host adress 127.0.0.1:443 to local conatiner adress on port 443
-
-Type exit to exit container
-
-
-## Run the server
-inside contrainer run"
-```shell
-apache2ctl -D FOREGROUND
-```
-You can access server via https://127.0.0.1
-(unfortunetly this is default website for old version of apache2)
-
-## Stimulate the server
-
-Before exploiting, you must stimulate the server with potentially sensitive data
-that can be harvested later by the exploit. The `stimulate_server.py` script
-does that, sending random credentials to the server via HTTP POST requests. The
-following is its usage and options:
-
-```shell
-Usage: stimulate_server.py [-a server_address] [-t sleep]
-```
-## Excercise 1: Get to know server
-
-* Using nmap check if server is vulnerable
-```shell
-sudo nmap -p 443 --script ssl-heartbleed 127.0.0.1
-```
-
-* If you wish to run another instance of bash inside container do:
-```shell
-sudo docker ps -a 
-sudo docker exec -it <id> /bin/bash
-```
-* View certificate
-```hint
-Inspect Dockerfile to check how server was set up
-```
-* Check openssl version
-
-## Excercise 2 Exploit using script
-
-This repo includes heartbleed.py script (in python2)
-
-```shell
-chmod 755 heartbleed.py
-./heartbleed.py -h
-```
-
-* using script try to extract some sensitive data
-* set verbose option analize how script executes
-* try to steal server private key and certificate
-
-To populate server memory with keys run:
-```shell
-watch 'cat /etc/apache2/ssl/apache.crt ; cat /etc/apache2/ssl/apache.key'
-
-```
-
-## Excersice 3 Exploit using metaspoit
-
-#### Start the Metasploit console
-```shell
-sudo msfconsole
-```
-
-#### Search Heartbleed module by using built in search feature in Metasploit framework
-```shell
-search heartbleed
-```
-
-#### Load the heartbleed by module
-```shell
-use auxiliary/scanner/ssl/openssl_heartbleed
-```
-
-#### After loading the auxiliary module, extract the info page to reveal the options to set the target
-```shell
-show info
-```
-
-#### This is a list of all auxiliary actions that the scanner/ssl/openssl_heartbleed module can do:
-```shell
-show actions
-```
-
-#### Here is a complete list of advanced options supported by the scanner/ssl/openssl_heartbleed auxiliary module:
-```shell
-show advanced
-```
-
-#### To view full list of possible evasion options supported by the scanner/ssl/openssl_heartbleed auxiliary module in order to evade defenses:
-```shell
-show evasion
-```
-
-* Explore Options
 
