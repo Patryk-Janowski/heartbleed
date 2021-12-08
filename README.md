@@ -43,7 +43,7 @@ Type exit to exit container
 
 
 ## Run the server
-inside contrainer run"
+Inside contrainer run
 ```shell
 apache2ctl -D FOREGROUND
 ```
