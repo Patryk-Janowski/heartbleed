@@ -37,13 +37,13 @@ On a terminal window, run the command:
 sudo docker run -it -p 127.0.0.1:443:443 andrewmichaelsmith/docker-heartbleed bash
 ```
 
-This command will execute bash in conatiner and map host adress 127.0.0.1:443 to local conatiner adress on port 443
+This command will execute bash in conatiner and map host address 127.0.0.1:443 to local conatiner address on port 443
 
 Type exit to exit container
 
 
 ## Run the server
-Inside contrainer run
+Inside container run
 ```shell
 apache2ctl -D FOREGROUND
 ```
@@ -111,7 +111,7 @@ This repo includes heartbleed.py script (in python2)
 #### 3. Try to steal server private key and certificate
 
 
-## Excersice 3: Exploit using metaspoit
+## Exercsice 3: Exploit using metaspoit
 
 #### 1. Start the Metasploit console
 ```shell
@@ -156,7 +156,7 @@ show evasion
 
 ## Excercise 4: some code snippet 
 
-#### 1. Inscect heartbeat request/response packet
+#### 1. Inspect heartbeat request/response packet
 
 **Format of the Heartbeat request/response packet**
 
@@ -171,7 +171,7 @@ struct {
 
 The first field (1 byte) of the packet is the type information, and the second field (2 bytes) is the payload length, followed by the actual payload and paddings. The size of the payload should be the same as the value in the payload length field, but in the attack scenario, payload length can be set to a different value. The following code snippet shows how the server copies the data from the request packet to the response packet.
 
-#### 2. Find faulty line in code bellow
+#### 2. Find faulty line in code below
 
 **Process the Heartbeat request packet and generate the response packet**
 
