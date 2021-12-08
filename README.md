@@ -5,15 +5,22 @@
 As part of my Software Security classes, I wanted to make this code available
 for OpenSSL's Heartbleed vulnerability demostration.
 
-## Requirements
+## Requirements and instalation
 
-* Docker:
-  * Docker 1.3.2 or later
-  * Docker Compose 1.6.2 or later
-* Python 2.7
-* cURL
-* Alternatively, you can use Podman (3.2.2 or later) instead of Docker.
-
+* Docker
+* Metasploit
+* Python 2
+```shell
+sudo apt-get update
+sudo apt-get install -y python2-dev docker.io metasploit-framework curl
+```
+* Python 2 packages
+```shell
+curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output /tmp/get-pip.py
+sudo python2 /tmp/get-pip.py
+pip install --upgrade setuptools
+pip install gmpy pyasn1
+```
 ## Pre-setup (optional)
 
 Usually I teach my classes in a very low bandwidth environment, so I prefer to
