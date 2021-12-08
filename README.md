@@ -1,9 +1,83 @@
 # Heartbleed Example
 
-## Introduction
+## Addiotional info
 
-As part of my Software Security classes, I wanted to make this code available
-for OpenSSL's Heartbleed vulnerability demostration.
+**Format of the Heartbeat request/response packet**
+
+```c
+struct {
+    HeartbeatMessageType type;  // 1 byte: request or the response
+    uint16 payload_length;      // 2 byte: the length of the payload
+    opaque payload[HeartbeatMessage.payload_length];
+    opaque padding[padding_length];
+} HeartbeatMessage;
+```
+
+The first field (1 byte) of the packet is the type information, and the second field (2 bytes) is the payload length, followed by the actual payload and paddings. The size of the payload should be the same as the value in the payload length field, but in the attack scenario, payload length can be set to a different value. The following code snippet shows how the server copies the data from the request packet to the response packet.
+
+**Process the Heartbeat request packet and generate the response packet**
+
+```c
+/* Allocate memory for the response, size is 1 byte
+ * message type, plus 2 bytes payload length, plus
+ * payload, plus padding
+*/
+
+unsigned int payload;
+unsigned int padding = 16; /* Use minimum padding */
+
+// Read from type field first
+hbtype = *p++; /* After this instruction, the pointer
+                * p will point to the payload_length field */
+
+// Read from the payload_length field from the request packet
+n2s(p, payload); /* Function n2s(p, payload) reads 16 bits
+                  * from pointer p and store the value
+                  * in the INT variable "payload". */
+
+pl = p; // pl points to the beginning of the payload content
+
+if (hbtype == TLS1_HB_REQUEST)
+{
+    unsigned char *buffer, *bp;
+    int r;
+
+    /* Allocate memory for the response, size is 1 byte
+     * message type, plus 2 bytes payload length, plus
+     * payload, plus padding
+     */
+
+    buffer = OPENSSL_malloc(1 + 2 + payload + padding);
+    bp = buffer;
+
+    // Enter response type, length and copy payload *bp++ = TLS1_HB_RESPONSE;
+    s2n(payload, bp);
+
+    // copy payload
+    memcpy(bp, pl, payload);   /* pl is the pointer which
+                                * points to the beginning
+                                * of the payload content */
+    bp += payload;
+
+    // Random padding
+    RAND_pseudo_bytes(bp, padding);
+
+    // this function will copy the 3+payload+padding bytes
+    // from the buffer and put them into the heartbeat response
+    // packet to send back to the request client side.
+    OPENSSL_free(buffer);
+    r = ssl3_write_bytes(s, TLS1_RT_HEARTBEAT, buffer, 3 + payload + padding);
+}
+```
+
+**The vulnerability lies here**
+
+```c
+    // copy payload
+    memcpy(bp, pl, payload);
+```
+
+There is no check to determine if `pl` is valid or not. Therefore, a memory breach can occur.
 
 ## Requirements and instalation
 
@@ -58,7 +132,8 @@ following is its usage and options:
 ```shell
 Usage: stimulate_server.py [-a server_address] [-t sleep]
 ```
-## Get to know server
+## Excercise 1: Get to know server
+
 * using nmap check if server is vulnerable
 ```shell
 sudo nmap -p 443 --script ssl-heartbleed 127.0.0.1
@@ -72,7 +147,7 @@ sudo docker exec -it <id> /bin/bash
 * view certificate
 * check openssl version
 
-## Exploit using script
+## Excercise 2 Exploit using script
 
 This repo includes heartbleed.py script (in python2)
 
@@ -86,3 +161,10 @@ output:
 * using script try to extract some sensitive data
 * set verbose option analize how script executes
 * try to steal server private key and certificate
+
+## Excersice 3 Exploit using metaspoit
+
+* Start the Metasploit console
+```shell
+'# msfconsole'
+```
