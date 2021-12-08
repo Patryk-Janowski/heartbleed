@@ -166,5 +166,5 @@ output:
 
 * Start the Metasploit console
 ```shell
-'# msfconsole'
+# msfconsole
 ```
