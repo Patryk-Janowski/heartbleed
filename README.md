@@ -51,7 +51,7 @@ You can access server via https://127.0.0.1
 (unfortunetly this is default website for old version of apache2)
 
 
-## Excercise 1: Find potential victions and get to know sever
+## Excercise 1: Find potential victioms and get to know the sever
 
 #### Finding vulnerable sites
 * use https://safeweb.norton.com/heartbleed to check if your favourite site is vulnerable.
