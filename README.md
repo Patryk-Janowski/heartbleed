@@ -92,7 +92,7 @@ You can inspect Dockerfile to check how server was set up
 
 ## Excercise 2: Exploit using script
 
-Before exploiting, you must stimulate the server with potentially sensitive data
+* Before exploiting, you must stimulate the server with potentially sensitive data
 that can be harvested later by the exploit. The `stimulate_server.py` script
 does that, sending random credentials to the server via HTTP POST requests. The
 following is its usage and options:
@@ -101,7 +101,34 @@ following is its usage and options:
 ./stimulate_server.py [-a server_address] [-t sleep]
 ```
 
-To populate server memory with keys run:
+* Troubleshooting in case curl failure:
+
+Edit openssl.conf file:
+
+"""
+sudo nano /etc/ssl/openssl.cnf
+"""
+
+Add this line at the top:
+
+"""
+openssl_conf = openssl_init
+"""
+
+And then this to the end:
+
+"""
+[openssl_init]
+ssl_conf = ssl_sect
+
+[ssl_sect]
+system_default = system_default_sect
+
+[system_default_sect]
+CipherString = DEFAULT@SECLEVEL=1
+"""
+
+* To populate server memory with keys run:
 ```shell
 watch 'cat /etc/apache2/ssl/apache.crt ; cat /etc/apache2/ssl/apache.key'
 
