@@ -7,7 +7,6 @@
 * Docker
 * Metasploit
 * Python 2
-*
 ```shell
 sudo apt-get update &&
 sudo apt-get install -y python2-dev docker.io metasploit-framework curl build-essential zlib1g zlib1g-dev libpq-dev libpcap-dev libsqlite3-dev ruby ruby-dev
