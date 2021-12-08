@@ -1,4 +1,4 @@
-# Heartbleed Example
+# Heartbleed
 
 ## Requirements and instalation
 
@@ -50,7 +50,30 @@ apache2ctl -D FOREGROUND
 You can access server via https://127.0.0.1
 (unfortunetly this is default website for old version of apache2)
 
-## Stimulate the server
+
+## Excercise 1: Find potential victions and get to know sever
+
+#### Finding vulnerable sites
+* use https://safeweb.norton.com/heartbleed to check if your favourite site is vulnerable.
+* try to find site which is vulnerable to heartbleed (for example you can use https://shodan.io).
+
+#### Using nmap check if server and found site are vulnerable
+```shell
+sudo nmap -p 443 --script ssl-heartbleed <IP>
+```
+
+#### If you wish to run another instance of bash inside container do:
+```shell
+sudo docker ps -a 
+sudo docker exec -it <id> /bin/bash
+```
+#### View certificate and private key
+
+You can inspect Dockerfile to check how server was set up
+
+#### Check openssl version
+
+## Excercise 2 Exploit using script
 
 Before exploiting, you must stimulate the server with potentially sensitive data
 that can be harvested later by the exploit. The `stimulate_server.py` script
@@ -60,25 +83,12 @@ following is its usage and options:
 ```shell
 ./stimulate_server.py [-a server_address] [-t sleep]
 ```
-## Excercise 1: Get to know server
 
-#### Using nmap check if server is vulnerable
+To populate server memory with keys run:
 ```shell
-sudo nmap -p 443 --script ssl-heartbleed 127.0.0.1
-```
+watch 'cat /etc/apache2/ssl/apache.crt ; cat /etc/apache2/ssl/apache.key'
 
-#### If you wish to run another instance of bash inside container do:
-```shell
-sudo docker ps -a 
-sudo docker exec -it <id> /bin/bash
 ```
-#### View certificate
-```hint
-Inspect Dockerfile to check how server was set up
-```
-#### Check openssl version
-
-## Excercise 2 Exploit using script
 
 This repo includes heartbleed.py script (in python2)
 
@@ -86,15 +96,10 @@ This repo includes heartbleed.py script (in python2)
 ./heartbleed.py -h
 ```
 
-* using script try to extract some sensitive data
-* set verbose option analize how script executes
-* try to steal server private key and certificate
+#### Using script try to extract some sensitive data
+#### Set verbose option analize how script executes
+#### Try to steal server private key and certificate
 
-To populate server memory with keys run:
-```shell
-watch 'cat /etc/apache2/ssl/apache.crt ; cat /etc/apache2/ssl/apache.key'
-
-```
 
 ## Excersice 3 Exploit using metaspoit
 
@@ -133,7 +138,10 @@ show advanced
 show evasion
 ```
 
-#### Explore Options Set RHOST and Run
+#### Explore available options and actions than:
+ * Set RHOST 
+ * Set Action
+ * Run
 #### Extract Certificate and Private Key using metaspolit
 
 ## Excercise 4 some code snippet 

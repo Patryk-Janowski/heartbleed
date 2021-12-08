@@ -17,27 +17,43 @@ if __name__ == '__main__':
     print(args.a)
 
     USER_LIST = [
-        'ncopano',
-        'nvaldebenito',
-        'ecaroe',
-        'skramer',
-        'alegrand',
-        'fcopano',
-        'amandel',
-        'sfreire',
-        'rsalinas'
+        'Arrhythmia',
+        'Cardiovascular disease',
+        'Coronary heart disease',
+        'Heart attack',
+        'Heart failure',
+        'High blood pressure',
+        'Stroke',
+        'Sudden cardiac arrest',
+        'Aorta',
+        'Blood clot',
+        'Bradycardia',
+        'Cholesterol',
+        'Collateral vessels',
+        'Defibrillator',
+        'Open heart surgery',
+        'Palpitation',
+        'Stress'
     ]
+
     PASSWORD_LIST = [
         '123456',
-        '12345',
-        '123456789',
         'password',
         'iloveyou',
         'princess',
-        '1234567',
-        '12345678',
+        'rockyou',
         'abc123',
         'nicole',
+        'daniel',
+        'babygirl',
+        'monkey',
+        'lovely',
+        'jessica',
+        'michael',
+        'qwerty',
+        'qazwsx',
+        'lucky1',
+        'potter'
     ]
 
     while True:
