@@ -51,7 +51,7 @@ You can access server via https://127.0.0.1
 (unfortunetly this is default website for old version of apache2)
 
 
-## Excercise 1: Find potential victioms and get to know the sever
+## Excercise 1: Find potential victims and get to know the sever
 
 #### 1. Finding vulnerable sites
 * use https://safeweb.norton.com/heartbleed to check if your favourite site is vulnerable.
@@ -111,7 +111,7 @@ This repo includes heartbleed.py script (in python2)
 #### 3. Try to steal server private key and certificate
 
 
-## Exercsice 3: Exploit using metaspoit
+## Exercise 3: Exploit using metasploit
 
 #### 1. Start the Metasploit console
 ```shell
