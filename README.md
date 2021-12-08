@@ -2,13 +2,25 @@
 
 ## Requirements and instalation
 
+### Ubuntu 20.04
+
 * Docker
 * Metasploit
 * Python 2
+*
 ```shell
 sudo apt-get update &&
-sudo apt-get install -y python2-dev docker.io metasploit-framework curl
+sudo apt-get install -y python2-dev docker.io metasploit-framework curl build-essential zlib1g zlib1g-dev libpq-dev libpcap-dev libsqlite3-dev ruby ruby-dev
 ```
+* Install Metasploit
+```shell
+git clone https://github.com/rapid7/metasploit-framework.git &&
+cd metasploit-framework/ &&
+sudo gem install bundlerlibsqlite3-dev ruby ruby-dev &&
+sudo bundle install
+```
+
+
 * Python 2 packages
 ```shell
 curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output /tmp/get-pip.py &&
@@ -19,7 +31,7 @@ pip install gmpy pyasn1
 ## Docker Setup
 
 ```shell
-docker pull docker.io/andrewmichaelsmith/docker-heartbleed
+sudo docker pull docker.io/andrewmichaelsmith/docker-heartbleed
 ```
 ## Clone Repository
 
@@ -45,7 +57,7 @@ Type exit to exit container
 ## Run the server
 Inside container run
 ```shell
-apache2ctl -D FOREGROUND
+apache2ctl -D BACKGROUND
 ```
 You can access server via https://127.0.0.1
 (unfortunetly this is default website for old version of apache2)
@@ -115,7 +127,7 @@ This repo includes heartbleed.py script (in python2)
 
 #### 1. Start the Metasploit console
 ```shell
-sudo msfconsole
+sudo ./msfconsole
 ```
 
 #### 2. Search Heartbleed module by using built in search feature in Metasploit framework
