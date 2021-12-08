@@ -1,6 +1,6 @@
 # Heartbleed Example
 
-## Addiotional info
+## Additional info
 
 **Format of the Heartbeat request/response packet**
 
